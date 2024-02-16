@@ -1,0 +1,171 @@
+A51 MACRO ASSEMBLER  BC3                                                                  04/16/2023 16:48:16 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\bc3.obj
+ASSEMBLER INVOKED BY: D:\keil\C51\BIN\A51.EXE bc3.asm SET(SMALL) DEBUG PRINT(.\Listings\bc3.lst) OBJECT(.\Objects\bc3.ob
+                      j) EP
+
+LOC  OBJ            LINE     SOURCE
+
+  00A0                 1     LED1 BIT P2.0
+  00A1                 2     LED2 BIT P2.1
+  00A2                 3     LED3 BIT P2.2
+  00A3                 4     LED4 BIT P2.3
+  00A4                 5     LED5 BIT P2.4
+  00A5                 6     LED6 BIT P2.5
+                       7     
+0000 00                8     SECOND:         DB      0
+0001 3A                9     MINUTE:         DB      00111010B
+0002 00               10     HOUR:           DB      0
+0000                  11     ORG 000H
+                      12     
+0000 7800             13     MOV R0,#SECOND
+0002 7A01             14     MOV R2,#MINUTE
+0004 7B02             15     MOV R3,#HOUR
+0006                  16     main:
+0006 7800             17             MOV R0,#SECOND
+0008 120031           18             LCALL H
+000B 80F9             19             JMP main
+000D                  20     S:      
+000D E8               21             MOV A,R0
+000E 12004A           22             LCALL TO_BCD
+0011 120061           23             LCALL Display_second
+0014 1200A0           24             LCALL DELAY_1S
+0017 08               25             INC R0
+0018 B83CF2           26             CJNE R0,#60,S
+001B 0A               27             INC R2
+001C 22               28     RET
+001D                  29     M:
+001D 7800             30             MOV R0,#SECOND
+001F EA               31             MOV A,R2
+0020 12004A           32             LCALL TO_BCD
+0023 120078           33             LCALL Display_minute
+0026 1200A0           34             LCALL DELAY_1S
+0029 12000D           35             LCALL S
+002C BA3CEE           36             CJNE R2,#60,M
+002F 0B               37             INC R3
+0030 22               38     RET     
+0031                  39     H:
+0031 7A01             40             MOV R2,#MINUTE
+0033 EB               41             MOV A,R3
+0034 12004A           42             LCALL TO_BCD
+0037 120089           43             LCALL Display_hour
+003A 1200A0           44             LCALL DELAY_1S
+003D 12001D           45             LCALL M
+0040 BB18EE           46             CJNE R3,#24,H
+0043 7800             47             MOV R0,#0H
+0045 7900             48             MOV R1,#0H
+0047 7A00             49             MOV R2,#0H
+0049 22               50     RET
+004A                  51     TO_BCD:
+004A 75F00A           52             MOV B,#10
+004D 84               53             DIV AB
+004E 85F010           54             MOV 10H,B
+0051 F511             55             MOV 11H,A
+0053 900900           56             MOV DPTR,#900H
+0056 E510             57             MOV A,10H
+A51 MACRO ASSEMBLER  BC3                                                                  04/16/2023 16:48:16 PAGE     2
+
+0058 93               58             MOVC A,@A + DPTR
+0059 F520             59             MOV 20H,A
+005B E511             60             MOV A,11H
+005D 93               61             MOVC A,@A + DPTR
+005E F525             62             MOV 25H,A
+0060 22               63     RET
+                      64     
+0061                  65     Display_second:
+0061 852080           66             MOV P0,20H
+0064 D2A5             67             SETB LED6
+0066 1200A2           68             LCALL DELAY5mS
+0069 53A000           69             ANL P2,#0H
+                      70             
+006C 852580           71             MOV P0,25H
+006F D2A4             72             SETB LED5
+0071 1200A2           73             LCALL DELAY5mS
+0074 53A000           74             ANL P2,#0h
+0077 22               75     RET
+                      76     
+0078                  77     Display_minute:
+0078 852080           78             MOV P0,20H
+007B D2A3             79             SETB LED4
+007D 1200A2           80             LCALL DELAY5mS
+                      81             
+                      82             
+0080 852580           83             MOV P0,25H
+0083 D2A2             84             SETB LED3
+0085 1200A2           85             LCALL DELAY5mS
+                      86             
+0088 22               87     RET
+                      88     
+0089                  89     Display_hour:
+0089 852080           90             MOV P0,20H
+008C D2A1             91             SETB LED2
+008E 1200A2           92             LCALL DELAY5mS
+0091 53A000           93             ANL P2,#0H
+                      94             
+0094 852580           95             MOV P0,25H
+0097 D2A0             96             SETB LED1
+0099 1200A2           97             LCALL DELAY5mS
+009C 53A000           98             ANL P2,#0H
+009F 22               99     RET
+00A0                 100     DELAY_1S:
+00A0 79D0            101             MOV R1,#2000
+*** _________________________________________^
+*** WARNING #A52 IN 101 (bc3.asm, LINE 101): VALUE HAS BEEN TRUNCATED TO 8 BITS
+00A2                 102     DELAY5mS:
+00A2 758901          103             MOV TMOD,#01H
+00A5 758CFE          104             MOV TH0,#0FEH
+00A8 758A0C          105             MOV TL0,#0CH
+00AB D28C            106             SETB TR0                
+00AD 308DFD          107             JNB TF0,$       
+00B0 C28C            108             CLR TR0
+00B2 C28D            109             CLR TF0 
+00B4 D9EC            110             DJNZ R1,DELAY5ms
+00B6 22              111     RET
+0900                 112     org 900H
+0900 C0F9A4B0        113     db 0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90
+0904 999282F8                
+0908 8090                    
+                     114     END
+A51 MACRO ASSEMBLER  BC3                                                                  04/16/2023 16:48:16 PAGE     3
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+B. . . . . . . . .  D ADDR   00F0H   A   
+DELAY5MS . . . . .  C ADDR   00A2H   A   
+DELAY_1S . . . . .  C ADDR   00A0H   A   
+DISPLAY_HOUR . . .  C ADDR   0089H   A   
+DISPLAY_MINUTE . .  C ADDR   0078H   A   
+DISPLAY_SECOND . .  C ADDR   0061H   A   
+H. . . . . . . . .  C ADDR   0031H   A   
+HOUR . . . . . . .  C ADDR   0002H   A   
+LED1 . . . . . . .  B ADDR   00A0H.0 A   
+LED2 . . . . . . .  B ADDR   00A0H.1 A   
+LED3 . . . . . . .  B ADDR   00A0H.2 A   
+LED4 . . . . . . .  B ADDR   00A0H.3 A   
+LED5 . . . . . . .  B ADDR   00A0H.4 A   
+LED6 . . . . . . .  B ADDR   00A0H.5 A   
+M. . . . . . . . .  C ADDR   001DH   A   
+MAIN . . . . . . .  C ADDR   0006H   A   
+MINUTE . . . . . .  C ADDR   0001H   A   
+P0 . . . . . . . .  D ADDR   0080H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+S. . . . . . . . .  C ADDR   000DH   A   
+SECOND . . . . . .  C ADDR   0000H   A   
+TF0. . . . . . . .  B ADDR   0088H.5 A   
+TH0. . . . . . . .  D ADDR   008CH   A   
+TL0. . . . . . . .  D ADDR   008AH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TO_BCD . . . . . .  C ADDR   004AH   A   
+TR0. . . . . . . .  B ADDR   0088H.4 A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  1 WARNING(S), 0 ERROR(S)

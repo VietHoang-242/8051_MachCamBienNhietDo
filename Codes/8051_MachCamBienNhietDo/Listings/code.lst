@@ -1,0 +1,105 @@
+A51 MACRO ASSEMBLER  CODE                                                                 05/28/2023 08:37:44 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\code.obj
+ASSEMBLER INVOKED BY: D:\keil\C51\BIN\A51.EXE code.asm SET(SMALL) DEBUG PRINT(.\Listings\code.lst) OBJECT(.\Objects\code
+                      .obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+  00A3                 1     led4 bit p2.3
+  00A2                 2     led3 bit p2.2
+  00A1                 3     led2 bit p2.1
+  00A0                 4     led1 bit p2.0
+                       5     
+0000                   6     org 000h
+0000                   7     main: 
+0000 12000B            8     lcall cdoi
+0003 120017            9     lcall bcd_7doan
+0006 12002E           10     lcall hienthi
+0009 80F5             11     jmp main
+                      12     
+000B                  13     cdoi:
+000B C2B1             14     clr p3.1
+000D 30B2FD           15     jnb p3.2,$    
+0010 D2B1             16     setb p3.1
+0012 C2B0             17     clr p3.0
+0014 E590             18     mov a,p1
+0016 22               19     ret
+                      20     
+0017                  21     bcd_7doan:
+0017 75F00A           22     mov b,#10
+001A 84               23     div ab
+001B 85F010           24     mov 10h,b     
+001E F511             25     mov 11h,a  
+                      26     
+0020 900900           27     mov dptr,#900h
+0023 E510             28     mov a,10h
+0025 93               29     movc a,@a + dptr
+0026 F520             30     mov 20h,a     
+0028 E511             31     mov a,11h
+002A 93               32     movc a,@a + dptr
+002B F521             33     mov 21h,a    
+002D 22               34     ret
+                      35     
+002E                  36     hienthi: 
+002E 852180           37     mov p0,21h
+0031 D2A0             38     setb led1
+0033 12005B           39     lcall delay
+0036 53A000           40     anl p2,#0h   
+                      41     
+0039 852080           42     mov p0,20h
+003C D2A1             43     setb led2
+003E 12005B           44     lcall delay
+0041 53A000           45     anl p2,#0h
+                      46     
+0044 75809C           47     mov p0,#09ch
+0047 D2A2             48     setb led3
+0049 12005B           49     lcall delay
+004C 53A000           50     anl p2,#0h
+                      51     
+004F 7580C6           52     mov p0,#0c6h
+0052 D2A3             53     setb led4
+0054 12005B           54     lcall delay
+0057 53A000           55     anl p2,#0h
+                      56     
+005A 22               57     ret
+A51 MACRO ASSEMBLER  CODE                                                                 05/28/2023 08:37:44 PAGE     2
+
+005B 757F64           58     delay: mov 7fh,#100
+005E D57FFD           59     djnz 7fh,$
+0061 22               60     ret
+0900                  61     org 900h
+0900 C0F9A4B0         62     db 0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90
+0904 999282F8                
+0908 8090                    
+                      63     END
+A51 MACRO ASSEMBLER  CODE                                                                 05/28/2023 08:37:44 PAGE     3
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+B. . . . . . . . .  D ADDR   00F0H   A   
+BCD_7DOAN. . . . .  C ADDR   0017H   A   
+CDOI . . . . . . .  C ADDR   000BH   A   
+DELAY. . . . . . .  C ADDR   005BH   A   
+HIENTHI. . . . . .  C ADDR   002EH   A   
+LED1 . . . . . . .  B ADDR   00A0H.0 A   
+LED2 . . . . . . .  B ADDR   00A0H.1 A   
+LED3 . . . . . . .  B ADDR   00A0H.2 A   
+LED4 . . . . . . .  B ADDR   00A0H.3 A   
+MAIN . . . . . . .  C ADDR   0000H   A   
+P0 . . . . . . . .  D ADDR   0080H   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+P3 . . . . . . . .  D ADDR   00B0H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)
